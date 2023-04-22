@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Get the name of the active network interfaces
+interfaces=$(ip link | awk '/state UP/ {print $2}' | cut -d: -f1)
+
+# Check the type of connection
+if [ -z "$interfaces" ]; then
+    echo "睊"
+else
+    # Set the interface variable to the first interface in the list
+    interface=$(echo $interfaces | awk '{print $1}')
+
+    # If the first interface is not Ethernet, check the second one
+    if ! ip link show $interface | grep -q "ether"; then
+        interface=$(echo $interfaces | awk '{print $2}')
+    fi
+
+
+    # Set the connection variable
+    if ip link show $interface | grep -q "eth"; then
+         echo "爵"
+    else
+        echo ""
+    fi
+fi
+
+# Print the connection variable
+
